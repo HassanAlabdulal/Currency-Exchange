@@ -102,6 +102,10 @@ body::after{
   width: 100%;
 }
 
+.container p {
+  width: 100%;
+}
+
 .container .converter-box .select-input{
   display: flex;
   width: 100%;
