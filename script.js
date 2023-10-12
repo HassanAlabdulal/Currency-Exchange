@@ -10,7 +10,7 @@ const exRateTxt = document.querySelector("form .result");
 
 [fromCur, toCur].forEach((select, i) => {
     for (let curCode in Country_List) {
-        const selected = (i === 0 && curCode === "USD") || (i === 1 && curCode === "GBP") ? "selected" : "";
+        const selected = (i === 0 && curCode === "SAR") || (i === 1 && curCode === "USD") ? "selected" : "";
         select.insertAdjacentHTML("beforeend", `<option value="${curCode}" ${selected}>${curCode}</option>`);
     }
     select.addEventListener("change", () => {
@@ -24,16 +24,22 @@ const exRateTxt = document.querySelector("form .result");
 
 async function getExchangeRate() {
     const amountVal = amount.value || 1;
-    exRateTxt.innerText = "Getting exchange rate...";
-    try {
-        const response = await fetch(`https://v6.exchangerate-api.com/[YOUR_KEY]/latest/${fromCur.value}`)
-        const result = await response.json();
-        const exchangeRate = result.conversion_rates[toCur.value];
-        const totalExRate = (amountVal * exchangeRate).toFixed(2);
-        exRateTxt.innerText = `${amountVal} ${fromCur.value} = ${totalExRate} ${toCur.value}`;
-    } catch (error) {
-        exRateTxt.innerText = "Something went wrong...";
+    let numbers = /^[0-9]+$/;
+    if(amountVal.match(numbers)){
+        exRateTxt.innerText = "Getting exchange rate...";
+        try {
+            const response = await fetch(`https://v6.exchangerate-api.com/v6/56e44e460e5a184b2c11d10f/latest/${fromCur.value}`)
+            const result = await response.json();
+            const exchangeRate = result.conversion_rates[toCur.value];
+            const totalExRate = (amountVal * exchangeRate).toFixed(2);
+            exRateTxt.innerText = `${amountVal} ${fromCur.value} = ${totalExRate} ${toCur.value}`;
+        } catch (error) {
+            exRateTxt.innerText = "Something went wrong...";
+        }
+    }else{
+        exRateTxt.innerText = "Enter only numbers!";
     }
+    
 }
 
 // Event listeners for button and exchange icon click
